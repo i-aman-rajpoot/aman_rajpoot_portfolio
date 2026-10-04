@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# After deploying, replace with your actual sitemap URL if you add a sitemap.

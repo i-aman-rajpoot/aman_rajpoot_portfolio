@@ -7,7 +7,7 @@ import {
 
 const PROFILE = {
   email: 'amanrajpoot101@gmail.com',
-  resumePath: '/resume.pdf', // Add your resume PDF to the public/ folder and name it resume.pdf.
+  resumePath: '/Aman_Rajpoot_CV.pdf',
   links: {
     linkedin: 'https://www.linkedin.com/in/i-aman-rajpoot/',
     github: 'https://github.com/i-aman-rajpoot',
@@ -305,7 +305,10 @@ function App() {
           <div className="hero-copy">
             <div className="availability"><span className="availability-dot" /> OPEN TO MEANINGFUL OPPORTUNITIES</div>
             <h1 aria-label={HEADLINES[headlineIndex].text}>
-              <span aria-hidden="true">
+              <span className="hero-heading-sizer" aria-hidden="true">
+                {HEADLINES.reduce((longest, headline) => headline.text.length > longest.text.length ? headline : longest).text}
+              </span>
+              <span className="hero-heading-animated" aria-hidden="true">
                 {renderedHeadline}
                 {!cursorPlaced && <span className="typing-cursor" />}
               </span>
@@ -428,7 +431,7 @@ function App() {
               <h3>Let's build something that matters.</h3>
               <p>For a complete view of my experience, projects, and education, download my résumé.</p>
               <a className="button button-primary full-button" href={PROFILE.resumePath} download>Download résumé <Download size={16} /></a>
-              <span className="resume-file-note">PDF · Add your résumé as public/resume.pdf</span>
+              <span className="resume-file-note">PDF · Aman Rajpoot</span>
             </aside>
           </div>
         </section>

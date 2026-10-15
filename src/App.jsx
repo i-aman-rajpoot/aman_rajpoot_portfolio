@@ -17,6 +17,14 @@ const PROFILE = {
   },
 }
 
+const SECTION_LINKS = [
+  { label: 'About', id: 'about' },
+  { label: 'Skills', id: 'skills' },
+  { label: 'Projects', id: 'projects' },
+  { label: 'Resume', id: 'resume' },
+  { label: 'Contact', id: 'contact' },
+]
+
 const PROJECTS = [
   {
     number: '01',
@@ -69,9 +77,10 @@ const PROJECTS = [
     description: 'A web application for collecting student details and persisting records in a PostgreSQL-backed database.',
     tags: ['Streamlit', 'Python', 'PostgreSQL', 'Supabase'],
     icon: Layers3,
-    url: '',
+    image: '/Student Data Lab Workflow.png',
+    url: 'https://student-reg-data-with-ai.streamlit.app/',
     repo: '',
-    status: 'Add your project link',
+    status: 'Live demo',
   },
   {
     number: '06',
@@ -157,10 +166,10 @@ function WhatsAppIcon({ size = 17 }) {
   )
 }
 
-function SectionHeading({ eyebrow, title, copy }) {
+function SectionHeading({ eyebrow, title, copy, isActive }) {
   return (
     <div className="section-heading">
-      <span className="eyebrow"><span className="eyebrow-dot" />{eyebrow}</span>
+      <span className={`eyebrow section-eyebrow${isActive ? ' section-eyebrow-active' : ''}`}><span className="eyebrow-dot" />{eyebrow}</span>
       <h2>{title}</h2>
       {copy && <p>{copy}</p>}
     </div>
@@ -272,31 +281,20 @@ function App() {
           {menuOpen ? <X size={21} /> : <Menu size={21} />}
         </button>
         <nav className={menuOpen ? 'nav nav-open' : 'nav'} aria-label="Main navigation">
-          {['About', 'Skills', 'Projects', 'Resume', 'Contact'].map((item) => (
+          {SECTION_LINKS.map(({ label, id }) => (
             <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              className={activeSection === item.toLowerCase() ? 'nav-active' : ''}
-              aria-current={activeSection === item.toLowerCase() ? 'location' : undefined}
+              key={id}
+              href={`#${id}`}
+              className={activeSection === id ? 'nav-active' : ''}
+              aria-current={activeSection === id ? 'location' : undefined}
               onClick={() => {
-                setActiveSection(item.toLowerCase())
+                setActiveSection(id)
                 closeMenu()
               }}
             >
-              {item}
+              {label}
             </a>
           ))}
-          <a
-            className={`nav-cta${activeSection === 'contact' ? ' nav-active' : ''}`}
-            href="#contact"
-            aria-current={activeSection === 'contact' ? 'location' : undefined}
-            onClick={() => {
-              setActiveSection('contact')
-              closeMenu()
-            }}
-          >
-            Let's talk <ArrowUpRight size={15} />
-          </a>
         </nav>
       </header>
 
@@ -362,7 +360,7 @@ function App() {
         </section>
 
         <section className="section-wrap section-block" id="about">
-          <SectionHeading eyebrow="A LITTLE ABOUT ME" title={<>Curiosity meets <span className="gradient-text">practical impact.</span></>} copy="I enjoy solving real business problems with data, thoughtful automation, and useful technology." />
+          <SectionHeading eyebrow="A LITTLE ABOUT ME" isActive={activeSection === 'about'} title={<>Curiosity meets <span className="gradient-text">practical impact.</span></>} copy="I enjoy solving real business problems with data, thoughtful automation, and useful technology." />
           <div className="about-grid">
             <div className="about-main">
               <span className="big-quote">“</span>
@@ -379,7 +377,7 @@ function App() {
         </section>
 
         <section className="section-wrap section-block" id="skills">
-          <SectionHeading eyebrow="MY TOOLKIT" title={<>Tools for the <span className="gradient-text">whole data journey.</span></>} copy="From querying source systems to communicating insights and shipping applications." />
+          <SectionHeading eyebrow="MY TOOLKIT" isActive={activeSection === 'skills'} title={<>Tools for the <span className="gradient-text">whole data journey.</span></>} copy="From querying source systems to communicating insights and shipping applications." />
           <div className="skills-grid">
             {SKILLS.map(({ group, icon: Icon, items }, index) => (
               <article className="skill-card" key={group}>
@@ -393,14 +391,14 @@ function App() {
 
         <section className="section-wrap section-block projects-section" id="projects">
           <div className="projects-heading-row">
-            <SectionHeading eyebrow="SELECTED WORK" title={<>Projects built to <span className="gradient-text">solve problems.</span></>} copy="A growing collection of analytics, automation, data engineering, and application projects." />
+            <SectionHeading eyebrow="SELECTED WORK" isActive={activeSection === 'projects'} title={<>Projects built to <span className="gradient-text">solve problems.</span></>} copy="A growing collection of analytics, automation, data engineering, and application projects." />
             <a href={PROFILE.links.github} className="text-link" target="_blank" rel="noreferrer">More on GitHub <ArrowUpRight size={16} /></a>
           </div>
           <div className="projects-grid">
-            {PROJECTS.map(({ number, type, title, description, tags, icon: Icon, url, repo, status }) => (
+            {PROJECTS.map(({ number, type, title, description, tags, icon: Icon, image, url, repo, status }) => (
               <article className="project-card" key={number}>
                 <div className="project-topline"><span>{type}</span><span className="project-number">{number}</span></div>
-                <div className="project-art"><div className="project-art-grid" /><div className="project-art-orb" /><Icon size={40} strokeWidth={1.15} /><span className="project-art-code">&lt;/&gt;</span></div>
+                <div className="project-art"><div className="project-art-grid" /><div className="project-art-orb" /><Icon size={40} strokeWidth={1.15} />{image && <img className="project-thumbnail" src={image} alt={`${title} workflow`} onError={(event) => { event.currentTarget.style.display = 'none' }} />}<span className="project-art-code">&lt;/&gt;</span></div>
                 <h3>{title}</h3>
                 <p>{description}</p>
                 <div className="project-tags">{tags.map(tag => <span key={tag}>{tag}</span>)}</div>
@@ -415,7 +413,7 @@ function App() {
         </section>
 
         <section className="section-wrap section-block resume-section" id="resume">
-          <SectionHeading eyebrow="EXPERIENCE & DIRECTION" title={<>A practical mindset. <span className="gradient-text">Continuous growth.</span></>} copy="A snapshot of the work I enjoy and the problems I like solving." />
+          <SectionHeading eyebrow="EXPERIENCE & DIRECTION" isActive={activeSection === 'resume'} title={<>A practical mindset. <span className="gradient-text">Continuous growth.</span></>} copy="A snapshot of the work I enjoy and the problems I like solving." />
           <div className="resume-layout">
             <div className="timeline">
               {EXPERIENCE.map((item, index) => (
@@ -438,7 +436,7 @@ function App() {
 
         <section className="section-wrap section-block contact-section" id="contact">
           <div className="contact-copy">
-            <SectionHeading eyebrow="GET IN TOUCH" title={<>Have a good question? <span className="gradient-text">Let's talk.</span></>} copy="Open to conversations about analytics, BI, automation, AI projects, and relevant professional opportunities." />
+            <SectionHeading eyebrow="GET IN TOUCH" isActive={activeSection === 'contact'} title={<>Have a good question? <span className="gradient-text">Let's talk.</span></>} copy="Open to conversations about analytics, BI, automation, AI projects, and relevant professional opportunities." />
             <a className="contact-email" href={`mailto:${PROFILE.email}`}><Mail size={18} />{PROFILE.email}<ArrowUpRight size={16} /></a>
             <div className="contact-socials">
               <ExternalLink href={PROFILE.links.linkedin}><Linkedin size={17} /> LinkedIn <ArrowUpRight size={13} /></ExternalLink>
